@@ -34,3 +34,16 @@ def chat_detail(request, chat_id):
     chat = Chat.objects.get(id=chat_id)
     messages = chat.messages.order_by('timestamp')
     return render(request, 'chat/chat_detail.html', {'chat': chat, 'messages': messages})
+
+@login_required
+def create_chat(request):
+    if request.method == 'POST':
+        usernames = request.POST.getlist('users')
+        users = User.objects.filter(username__in=usernames)
+        chat = Chat.objects.create()
+        chat.participants.add(*users, request.user)
+        chat.save()
+        return redirect('chat_detail', chat_id=chat.id)
+    
+    all_users = User.objects.exclude(id=request.user.id)
+    return render(request, 'chat/create_chat.html', {'users': all_users})

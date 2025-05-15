@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Create New Chat</h2>
+<form method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label>Select users to chat with:</label><br>
+        {% for user in users %}
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="users" value="{{ user.username }}" id="user_{{ user.id }}">
+                <label class="form-check-label" for="user_{{ user.id }}">
+                    {{ user.username }}
+                </label>
+            </div>
+        {% endfor %}
+    </div>
+    <button type="submit" class="btn btn-primary">Create Chat</button>
+</form>
+{% endblock %}
