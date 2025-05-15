@@ -4,6 +4,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
+from .models import Chat, Message
+from django.contrib.auth.models import User
 
 @login_required
 def index(request):
@@ -19,3 +21,10 @@ def signup_view(request):
     else:
         form = UserCreationForm()
     return render(request, 'registration/signup.html', {'form': form})
+
+
+
+@login_required
+def index(request):
+    user_chats = request.user.chats.all()
+    return render(request, 'chat/index.html', {'chats': user_chats})
