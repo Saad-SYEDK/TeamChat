@@ -28,3 +28,9 @@ def signup_view(request):
 def index(request):
     user_chats = request.user.chats.all()
     return render(request, 'chat/index.html', {'chats': user_chats})
+
+@login_required
+def chat_detail(request, chat_id):
+    chat = Chat.objects.get(id=chat_id)
+    messages = chat.messages.order_by('timestamp')
+    return render(request, 'chat/chat_detail.html', {'chat': chat, 'messages': messages})

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ chat.name|default:"Chat" }}</h2>
+
+<div id="chat-box" style="border:1px solid #ccc; padding:10px; height:300px; overflow-y:scroll;">
+    {% for message in messages %}
+        <p><strong>{{ message.sender.username }}:</strong> {{ message.content }}</p>
+    {% endfor %}
+</div>
+
+<input type="text" id="messageInput" placeholder="Type a message..." class="form-control mt-2">
+<script>
+    const chatId = "{{ chat.id }}";
+    const ws = new WebSocket(
+        'ws://' + window.location.host + '/ws/chat/' + chatId + '/'
+    );
+
+    ws.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        document.getElementById('chat-box').innerHTML += 
+            `<p><strong>${data.sender}:</strong> ${data.message}</p>`;
+    };
+
+    document.getElementById('messageInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            const message = e.target.value;
+            ws.send(JSON.stringify({ 'message': message }));
+            e.target.value = '';
+        }
+    });
+</script>
+{% endblock %}
