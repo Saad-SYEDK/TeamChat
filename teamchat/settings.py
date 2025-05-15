@@ -135,3 +135,9 @@ CHANNEL_LAYERS = {
 
 TEMPLATES[0]['DIRS'] = [BASE_DIR / 'templates']
 STATIC_URL = '/static/'
+
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = '/chat/'  # or wherever you want users to go after login
+
+LOGOUT_REDIRECT_URL = '/accounts/login/'
+

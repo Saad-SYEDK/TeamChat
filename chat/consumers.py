@@ -25,27 +25,32 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data):
         data = json.loads(text_data)
-        message = data['message']
+        message = data.get('message', '').strip()  # strip spaces
         sender = self.scope["user"]
+
+        if not message:
+            # Ignore empty or whitespace-only messages
+            return
 
         await self.save_message(sender, self.chat_id, message)
 
         await self.channel_layer.group_send(
             self.room_group_name,
-            {
-                'type': 'chat_message',
-                'message': message,
-                'sender': sender.username
-            }
-        )
+        {
+            'type': 'chat_message',
+            'message': message,
+            'sender': sender.username
+        }
+    )
 
     async def chat_message(self, event):
+        # This is the handler for 'chat_message' type messages
         await self.send(text_data=json.dumps({
             'message': event['message'],
-            'sender': event['sender']
+            'sender': event['sender'],
         }))
 
-    @database_sync_to_async
+    @database_sync_to_async 
     def save_message(self, sender, chat_id, message):
         chat = Chat.objects.get(id=chat_id)
         return Message.objects.create(chat=chat, sender=sender, content=message)

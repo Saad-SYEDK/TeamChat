@@ -4,7 +4,7 @@
 <ul class="list-group">
     {% for chat in chats %}
         <li class="list-group-item">
-            <a href="#">{{ chat.name|default:"Private Chat" }}</a>
+            <a href="{% url 'chat_detail' chat.id %}">{{ chat.name|default:"Private Chat" }}</a>
         </li>
     {% empty %}
         <li class="list-group-item">No chats yet</li>
