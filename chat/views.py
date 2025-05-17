@@ -32,14 +32,24 @@ def index(request):
             other_user = chat.participants.exclude(id=request.user.id).first()
         else:
             other_user = None
-        chats_with_other.append((chat, other_user))
 
-    return render(request, 'chat/index.html', {'chats_with_other': chats_with_other})
+        unread_count = chat.messages.exclude(sender=request.user).exclude(read_by=request.user).count()
+
+        chats_with_other.append((chat, other_user, unread_count))
+
+    return render(request, 'chat/index.html', {
+        'chats_with_other': chats_with_other
+    })
+
 
 @login_required
 def chat_detail(request, chat_id):
     chat = Chat.objects.get(id=chat_id)
     messages = chat.messages.all()
+
+    for message in messages:
+        if request.user != message.sender and request.user not in message.read_by.all():
+            message.read_by.add(request.user)
 
     other_user = None
     if not chat.is_group:
