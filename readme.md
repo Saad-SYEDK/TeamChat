@@ -59,3 +59,9 @@ source venv/bin/activate
 ### 2. Install requirements
 ```bash
 pip install -r requirements.txt
+```
+### 3.Apply migrations and create superuser (optional)
+```
+python manage.py migrate
+python manage.py createsuperuser  # optional, for admin access
+```
