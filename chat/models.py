@@ -15,7 +15,7 @@ class Message(models.Model):
     sender = models.ForeignKey(User, on_delete=models.CASCADE)
     content = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
-    read_by = models.ManyToManyField(User, related_name='read_messages', blank=True)  # ✅ NEW LINE
+    read_by = models.ManyToManyField(User, related_name='read_messages', blank=True)  # ✅ NEW
 
     def __str__(self):
         return f"{self.sender.username}: {self.content[:30]}"

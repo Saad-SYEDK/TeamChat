@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-<a href="{% url 'chat_index' %}" class="btn btn-secondary mb-3">← Back to Chats</a>
+<a href="{% url 'chat_index' %}">&larr; Back to Chats</a>
 
 <h2>
     {% if chat.is_group %}
@@ -10,32 +10,22 @@
     {% endif %}
 </h2>
 
-
-<div id="chat-box" style="border:1px solid #ccc; padding:10px; height:300px; overflow-y:scroll;">
+<div class="messages">
     {% for message in messages %}
-        <p><strong>{{ message.sender.username }}:</strong> {{ message.content }}</p>
+        <div class="message">
+            <strong>{{ message.sender.username }}</strong>:
+            {{ message.content }}
+            <small class="text-muted">{{ message.timestamp|date:"Y-m-d H:i:s" }}</small>
+        </div>
+    {% empty %}
+        <p>No messages yet.</p>
     {% endfor %}
 </div>
 
-<input type="text" id="messageInput" placeholder="Type a message..." class="form-control mt-2">
-<script>
-    const chatId = "{{ chat.id }}";
-    const ws = new WebSocket(
-        'ws://' + window.location.host + '/ws/chat/' + chatId + '/'
-    );
+<form method="post" autocomplete="off" action="{% url 'send_message' chat.id %}">
+    {% csrf_token %}
+    <input type="text" name="content"  placeholder="Type a message" class="form-control" required>
+    <button type="submit" class="btn btn-primary mt-2">Send</button>
+</form>
 
-    ws.onmessage = function(e) {
-        const data = JSON.parse(e.data);
-        document.getElementById('chat-box').innerHTML += 
-            `<p><strong>${data.sender}:</strong> ${data.message}</p>`;
-    };
-
-    document.getElementById('messageInput').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            const message = e.target.value;
-            ws.send(JSON.stringify({ 'message': message }));
-            e.target.value = '';
-        }
-    });
-</script>
 {% endblock %}
