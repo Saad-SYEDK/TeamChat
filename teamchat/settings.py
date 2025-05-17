@@ -153,3 +153,7 @@ STATICFILES_DIRS = [
 ALLOWED_HOSTS = ['*']
 
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+CSRF_TRUSTED_ORIGINS = ['https://teamchat-exx4.onrender.com']
+CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', 'https://teamchat-exx4.onrender.com').split(',')
+
