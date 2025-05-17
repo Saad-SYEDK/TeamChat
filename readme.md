@@ -1,40 +1,60 @@
-# Team Chat Platform (Django + Channels)
+# 🗨️ TeamChat – Real-Time Django Chat Platform
 
-A real‑time team chat application built for the recruitment assignment.
+---
 
-## Features
-- User signup / login / logout (Django auth)
-- 1‑to‑1 and group chats
-- Real‑time messaging via **Django Channels** + WebSockets
-- Unread message badges and read receipts
-- Bootstrap‑styled responsive UI
-- Admin site to manage users, chats, and messages
+## ✨ Features
 
-## Tech Stack
-| Layer | Tech |
-|-------|------|
-| Backend | Django 5 & Channels |
-| Real‑time | WebSockets (Daphne ASGI) |
-| Storage | SQLite (dev) / any SQL in prod |
-| Frontend | Django templates + Bootstrap 5 |
-| Optional | Redis (for production channel layer) |
+| Core Features                      | Bonus Features                        |
+|-----------------------------------|---------------------------------------|
+| 🔐 User login, logout, registration | ✅ Unread message badges              |
+| 💬 One-on-one and group chats      | ✅ Typing-indicator (WebSocket-ready) |
+| ⚡ Real-time messaging              | 🧹 Message delete/edit (TODO)         |
+| 🗂 Chat history with DB persistence | 🔍 Search (placeholder UI)           |
+| 🎨 Bootstrap 5 Responsive UI       | 🌙 Dark-mode ready                    |
+| 🔒 Secure CSRF & WebSocket auth    | 🚀 Docker & Render deploy setup      |
 
-## Setup (Local)
+---
 
+## 📸 Screenshots
+
+**Login Page**
+
+![Login Page](screenshots/login.PNG)
+
+**Login Page**
+
+![Signup Page](screenshots/signup.PNG)
+
+**Chat Dashboard**
+
+![Chat Dashboard](screenshots/home.PNG)
+
+**Real-Time Messaging**
+
+![Real-Time Chat](screenshots/realtime.PNG)
+
+
+## 🛠️ Tech Stack
+
+- **Python 3.11**
+- **Django 5.2.1**
+- **Django Channels 4**
+- **Bootstrap 5**
+- **SQLite (local)** / **PostgreSQL (Render)**
+- **Redis (Upstash - prod channel layer)**
+- **Docker + Daphne + Gunicorn**
+
+---
+
+## ⚙️ How to Run Locally
+
+### 1. Clone and set up environment
 ```bash
-git clone <repo>
+git clone https://github.com/Saad-SYEDK/TeamChat
 cd teamchat
 python -m venv venv
-source venv/bin/activate          # Windows: venv\Scripts\activate
+source venv/bin/activate
+
+### 2. Install requirements
+```bash
 pip install -r requirements.txt
-
-# env vars
-export DJANGO_SECRET_KEY="something‑secret"
-export DEBUG=1
-
-python manage.py migrate
-python manage.py createsuperuser
-python manage.py runserver
-
-use this instead of runserver:
-   daphne -b 0.0.0.0 -p $PORT teamchat.asgi:application
