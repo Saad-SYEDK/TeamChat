@@ -145,3 +145,5 @@ LOGOUT_REDIRECT_URL = '/accounts/login/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
+
+STATIC_ROOT = BASE_DIR / 'staticfiles'

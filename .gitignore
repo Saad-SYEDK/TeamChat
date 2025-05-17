@@ -1,0 +1,27 @@
+# Python cache files
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environment folders
+venv/
+ENV/
+env/
+
+# Database files
+db.sqlite3
+
+# Django static files
+/staticfiles/
+media/
+
+# Logs
+*.log
+
+# IDE/editor files
+.vscode/
+.idea/
+*.swp
+
+# Environment variables file (if any)
+.env
