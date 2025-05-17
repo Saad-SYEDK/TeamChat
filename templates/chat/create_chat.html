@@ -1,43 +1,48 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% block content %}
-<h2>Create a Chat</h2>
-{% if error %}
-    <div class="alert alert-danger">{{ error }}</div>
-{% endif %}
-<form method="post">
-    {% csrf_token %}
-    <div class="form-check mb-3">
-        <input type="checkbox" class="form-check-input" name="is_group" id="is_group" onchange="toggleNameField()">
-        <label class="form-check-label" for="is_group">Group Chat</label>
-    </div>
-    <div class="mb-3" id="name_field" style="display: none;">
-        <label for="name" class="form-label">Group Name:</label>
-        <input type="text" name="name" class="form-control">
-    </div>
-    <div class="mb-3">
-        <label>Select Participants:</label><br>
-        {% for user in users %}
-            <div class="form-check">
-                <input class="form-check-input participant" type="checkbox" name="participants" value="{{ user.id }}" id="user{{ user.id }}">
-                <label class="form-check-label" for="user{{ user.id }}">{{ user.username }}</label>
-            </div>
-        {% endfor %}
-    </div>
-    <button type="submit" class="btn btn-primary">Create Chat</button>
-</form>
+<div class="card p-4 shadow">
+    <h4 class="mb-3">Create Chat</h4>
+
+    {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-check form-switch mb-3">
+            <input class="form-check-input" type="checkbox" name="is_group" id="is_group" onchange="toggleGroupFields(this)">
+            <label class="form-check-label" for="is_group">Group Chat</label>
+        </div>
+
+        <div class="mb-3" id="chat_name_div" style="display: none;">
+            <label class="form-label">Chat Name</label>
+            <input type="text" class="form-control" name="name">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Participants</label>
+            {% for user in users %}
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="participants" value="{{ user.id }}" id="user_{{ user.id }}">
+                    <label class="form-check-label" for="user_{{ user.id }}">{{ user.username }}</label>
+                </div>
+            {% endfor %}
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Create</button>
+    </form>
+</div>
 
 <script>
-    function toggleNameField() {
-        const isGroup = document.getElementById('is_group').checked;
-        document.getElementById('name_field').style.display = isGroup ? 'block' : 'none';
-    }
+    function toggleGroupFields(checkbox) {
+        const nameDiv = document.getElementById('chat_name_div');
+        nameDiv.style.display = checkbox.checked ? 'block' : 'none';
 
-    // Optional: auto-deselect if group is not selected
-    document.getElementById('is_group').addEventListener('change', () => {
-        const checkboxes = document.querySelectorAll('.participant');
-        if (!event.target.checked) {
-            checkboxes.forEach(cb => cb.checked = false);
-        }
-    });
+        const checkboxes = document.querySelectorAll('input[name="participants"]');
+        checkboxes.forEach(cb => cb.type = checkbox.checked ? 'checkbox' : 'radio');
+    }
+    window.onload = () => {
+        toggleGroupFields(document.getElementById('is_group'));
+    }
 </script>
 {% endblock %}

@@ -21,6 +21,7 @@ from django.urls import path, include
 from django.views.generic import RedirectView
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.views import LogoutView
+from chat.admin import admin_site
 
 urlpatterns = [
     path('admin/', admin.site.urls),

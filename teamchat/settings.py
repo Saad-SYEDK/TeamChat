@@ -141,3 +141,7 @@ LOGIN_REDIRECT_URL = '/chat/'  # or wherever you want users to go after login
 
 LOGOUT_REDIRECT_URL = '/accounts/login/'
 
+
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
