@@ -33,13 +33,11 @@ def index(request):
         else:
             other_user = None
 
-        unread_count = chat.messages.exclude(sender=request.user).exclude(read_by=request.user).count()
-
+        unread_count = chat.messages.filter(sender__ne=request.user, timestamp__gt=request.user.last_login).count()
         chats_with_other.append((chat, other_user, unread_count))
 
-    return render(request, 'chat/index.html', {
-        'chats_with_other': chats_with_other
-    })
+    return render(request, 'chat/index.html', {'chats_with_other': chats_with_other})
+
 
 
 @login_required
