@@ -128,14 +128,26 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # Use Redis (Upstash or render-provided)
+import os
+import os
+
+
 CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            "hosts": [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [
+                os.environ.get(
+                    "rediss://default:ATzWAAIjcDFkZDBiYWVlYTcwODM0YzQ0OTY1ZDUwYmM2ODNjYWIxOXAxMA@intense-loon-15574.upstash.io:6379"
+,
+                    "redis://localhost:6379"
+                )
+            ],
         },
     },
 }
+
+
 
 TEMPLATES[0]['DIRS'] = [BASE_DIR / 'templates']
 STATIC_URL = '/static/'
