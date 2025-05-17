@@ -46,6 +46,7 @@
 
 ---
 ## 📂 Project Structure
+```bash
 teamchat/
 ├── chat/
 │   ├── migrations/
@@ -68,6 +69,7 @@ teamchat/
 ├── manage.py
 ├── requirements.txt
 └── README.md
+```
 
 ## ⚙️ How to Run Locally
 
