@@ -1,0 +1,6 @@
+Django>=4.0
+daphne
+channels
+channels_redis
+gunicorn
+bootstrap5
