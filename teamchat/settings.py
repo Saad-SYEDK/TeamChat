@@ -24,7 +24,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-iy*z%%lrzb@x@3!8@awqwyf@l+jy0_y1%p=buh%40+z_5&of2%'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = os.environ.get("DEBUG", "0") == "1"
+
 
 
 # Application definition
@@ -73,6 +74,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'teamchat.wsgi.application'
 
 ASGI_APPLICATION = 'teamchat.asgi.application'
+
 
 
 
@@ -165,6 +167,11 @@ STATICFILES_DIRS = [
 ]
 
 ALLOWED_HOSTS = ['*']
+
+
+
+SECRET_KEY = os.environ.get("2c8bec8e2ea834021dfebd47c85e9c12", "insecure-default-key-for-dev")
+
 
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 

@@ -1,5 +1,6 @@
-Django>=4.0
-daphne
-channels
-channels_redis
-gunicorn
+Django==5.2.1
+daphne==4.2.0           # ASGI server
+channels==4.2.2
+channels_redis==4.2.1   # comment out if using InMemoryChannelLayer in prod
+redis==6.1.0            # only if channels_redis is enabled
+django-widget-tweaks==1.5.0

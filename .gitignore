@@ -1,27 +1,23 @@
-# Python cache files
+# Python
 __pycache__/
 *.py[cod]
-*.pyo
-
-# Virtual environment folders
-venv/
-ENV/
+*.sqlite3
 env/
+venv/
+.venv/
+*.egg-info/
 
-# Database files
-db.sqlite3
-
-# Django static files
-/staticfiles/
-media/
-
-# Logs
-*.log
-
-# IDE/editor files
+# VS Code / PyCharm / etc.
 .vscode/
 .idea/
-*.swp
 
-# Environment variables file (if any)
+# OS files
+.DS_Store
+Thumbs.db
+
+# Django static & media (collected/served elsewhere)
+staticfiles/
+media/
+
+# Secrets
 .env
