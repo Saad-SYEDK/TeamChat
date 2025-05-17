@@ -45,6 +45,29 @@
 - **Docker + Daphne + Gunicorn**
 
 ---
+## 📂 Project Structure
+teamchat/
+├── chat/
+│   ├── migrations/
+│   ├── templates/chat/
+│   ├── static/chat/
+│   ├── consumers.py
+│   ├── models.py
+│   ├── urls.py
+│   └── views.py
+├── teamchat/
+│   ├── __init__.py
+│   ├── settings.py
+│   ├── urls.py
+│   └── asgi.py
+├── templates/
+│   └── base.html
+├── static/
+│   └── ...
+├── db.sqlite3
+├── manage.py
+├── requirements.txt
+└── README.md
 
 ## ⚙️ How to Run Locally
 
@@ -61,7 +84,11 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 ### 3.Apply migrations and create superuser (optional)
-```
+```bash
 python manage.py migrate
 python manage.py createsuperuser  # optional, for admin access
+```
+### 4. Run server
+```bash
+daphne -b 0.0.0.0 -p 8000 teamchat.asgi:application
 ```
