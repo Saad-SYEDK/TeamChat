@@ -150,4 +150,6 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
 
+ALLOWED_HOSTS = ['*']
+
 STATIC_ROOT = BASE_DIR / 'staticfiles'
