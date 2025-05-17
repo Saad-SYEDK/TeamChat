@@ -1,23 +1,13 @@
-# Python
 __pycache__/
 *.py[cod]
 *.sqlite3
-env/
-venv/
-.venv/
-*.egg-info/
-
-# VS Code / PyCharm / etc.
-.vscode/
-.idea/
-
-# OS files
-.DS_Store
-Thumbs.db
-
-# Django static & media (collected/served elsewhere)
-staticfiles/
+*.log
+*.env
 media/
-
-# Secrets
+*.zip
+*.tar.gz
+node_modules/
+venv/
 .env
+.DS_Store
+    
