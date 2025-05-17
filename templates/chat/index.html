@@ -1,11 +1,17 @@
 {% extends "base.html" %}
 {% block content %}
 <h2>Your Chats</h2>
-<a href="{% url 'create_chat' %}" class="btn btn-success mb-3">+ New Chat</a>
+<a href="{% url 'create_chat' %}" class="btn btn-success mb-3">+ Create New Chat</a>
 <ul class="list-group">
-    {% for chat in chats %}
+    {% for chat, other_user in chats_with_other %}
         <li class="list-group-item">
-            <a href="{% url 'chat_detail' chat.id %}">{{ chat.name|default:"Private Chat" }}</a>
+            <a href="{% url 'chat_detail' chat.id %}">
+                {% if chat.is_group %}
+                    {{ chat.name }}
+                {% else %}
+                    {{ other_user.username }}
+                {% endif %}
+            </a>
         </li>
     {% empty %}
         <li class="list-group-item">No chats yet</li>

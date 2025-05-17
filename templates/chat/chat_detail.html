@@ -2,7 +2,14 @@
 {% block content %}
 <a href="{% url 'chat_index' %}" class="btn btn-secondary mb-3">← Back to Chats</a>
 
-<h2>{{ chat.name|default:"Chat" }}</h2>
+<h2>
+    {% if chat.is_group %}
+        {{ chat.name }}
+    {% else %}
+        {{ other_user.username }}
+    {% endif %}
+</h2>
+
 
 <div id="chat-box" style="border:1px solid #ccc; padding:10px; height:300px; overflow-y:scroll;">
     {% for message in messages %}

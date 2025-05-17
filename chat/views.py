@@ -22,28 +22,68 @@ def signup_view(request):
         form = UserCreationForm()
     return render(request, 'registration/signup.html', {'form': form})
 
-
-
 @login_required
 def index(request):
     user_chats = request.user.chats.all()
-    return render(request, 'chat/index.html', {'chats': user_chats})
+
+    chats_with_other = []
+    for chat in user_chats:
+        if not chat.is_group:
+            other_user = chat.participants.exclude(id=request.user.id).first()
+        else:
+            other_user = None
+        chats_with_other.append((chat, other_user))
+
+    return render(request, 'chat/index.html', {'chats_with_other': chats_with_other})
 
 @login_required
 def chat_detail(request, chat_id):
     chat = Chat.objects.get(id=chat_id)
-    messages = chat.messages.order_by('timestamp')
-    return render(request, 'chat/chat_detail.html', {'chat': chat, 'messages': messages})
+    messages = chat.messages.all()
+
+    other_user = None
+    if not chat.is_group:
+        other_user = chat.participants.exclude(id=request.user.id).first()
+
+    context = {
+        'chat': chat,
+        'messages': messages,
+        'other_user': other_user,
+    }
+    return render(request, 'chat/chat_detail.html', context)
+
 
 @login_required
 def create_chat(request):
     if request.method == 'POST':
-        usernames = request.POST.getlist('users')
-        users = User.objects.filter(username__in=usernames)
-        chat = Chat.objects.create()
-        chat.participants.add(*users, request.user)
-        chat.save()
+        is_group = request.POST.get('is_group') == 'on'
+        selected_user_ids = request.POST.getlist('participants')
+        chat_name = request.POST.get('name').strip()
+
+        if is_group:
+            if not chat_name:
+                return render(request, 'chat/create_chat.html', {
+                    'error': 'Group chat must have a name.',
+                    'users': User.objects.exclude(id=request.user.id)
+                })
+            if len(selected_user_ids) < 2:
+                return render(request, 'chat/create_chat.html', {
+                    'error': 'Select at least two users for a group chat.',
+                    'users': User.objects.exclude(id=request.user.id)
+                })
+        else:
+            if len(selected_user_ids) != 1:
+                return render(request, 'chat/create_chat.html', {
+                    'error': 'Private chat must have exactly one user.',
+                    'users': User.objects.exclude(id=request.user.id)
+                })
+            chat_name = None  # Will be set dynamically in chat list
+
+        chat = Chat.objects.create(name=chat_name, is_group=is_group)
+        chat.participants.add(request.user)
+        for user_id in selected_user_ids:
+            chat.participants.add(User.objects.get(id=user_id))
         return redirect('chat_detail', chat_id=chat.id)
-    
-    all_users = User.objects.exclude(id=request.user.id)
-    return render(request, 'chat/create_chat.html', {'users': all_users})
+
+    users = User.objects.exclude(id=request.user.id)
+    return render(request, 'chat/create_chat.html', {'users': users})
