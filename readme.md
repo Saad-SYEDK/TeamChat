@@ -54,6 +54,7 @@ git clone https://github.com/Saad-SYEDK/TeamChat
 cd teamchat
 python -m venv venv
 source venv/bin/activate
+```
 
 ### 2. Install requirements
 ```bash
