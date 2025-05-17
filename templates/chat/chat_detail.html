@@ -5,30 +5,86 @@
 </div>
 
 <h4>
-    {% if chat.is_group %}
-        {{ chat.name }}
-    {% else %}
-        {{ other_user.username }}
-    {% endif %}
+    {% if chat.is_group %}{{ chat.name }}{% else %}{{ other_user.username }}{% endif %}
 </h4>
 
-<div class="card p-3 mb-3" style="max-height: 400px; overflow-y: auto;">
+<!-- chat history -->
+<div id="chat-box" class="card p-3 mb-3" style="max-height: 400px; overflow-y:auto;">
     {% for message in messages %}
         <div class="mb-2 {% if message.sender == user %}text-end{% endif %}">
             <div class="d-inline-block px-3 py-2 rounded {% if message.sender == user %}bg-primary text-white{% else %}bg-light{% endif %}">
-                <strong>{{ message.sender.username }}</strong><br>
-                {{ message.content }}
+                <strong>{{ message.sender.username }}</strong><br>{{ message.content }}
             </div>
             <div class="text-muted small">{{ message.timestamp|date:"M d, H:i" }}</div>
         </div>
-    {% empty %}
-        <p class="text-muted">No messages yet.</p>
     {% endfor %}
 </div>
 
-<form method="post" class="d-flex gap-2">
-    {% csrf_token %}
-    <input type="text" name="content" class="form-control" placeholder="Type a message..." autocomplete="off" required>
-    <button type="submit" class="btn btn-success">Send</button>
+<!-- message input -->
+<form id="chat-form" class="d-flex gap-2" onsubmit="return false;">
+    <input id="chat-input" class="form-control" type="text" placeholder="Type a message…" autocomplete="off" required>
+    <button id="chat-send" class="btn btn-success" type="button">Send</button>
 </form>
+
+<!-- JS -->
+<script>
+(function () {
+  const chatId   = "{{ chat.id }}";
+  const selfUser = "{{ user.username }}";
+  const wsScheme = location.protocol === "https:" ? "wss" : "ws";
+  const socket   = new WebSocket(`${wsScheme}://${location.host}/ws/chat/${chatId}/`);
+
+  const box   = document.getElementById('chat-box');
+  const input = document.getElementById('chat-input');
+  const send  = document.getElementById('chat-send');
+
+  // Append helper
+  function append(msg, sender) {
+      const wrap = document.createElement('div');
+      wrap.className = 'mb-2' + (sender === selfUser ? ' text-end' : '');
+      wrap.innerHTML =
+        `<div class="d-inline-block px-3 py-2 rounded ${sender === selfUser ? 'bg-primary text-white' : 'bg-light'}">
+            <strong>${sender}</strong><br>${msg}
+         </div>`;
+      box.appendChild(wrap);
+      box.scrollTop = box.scrollHeight;
+  }
+
+  // Send only if socket is open
+  function sendMessage() {
+      const text = input.value.trim();
+      if (!text) return;
+      if (socket.readyState === WebSocket.OPEN) {
+          socket.send(JSON.stringify({ message: text }));
+          input.value = '';
+      } else {
+          alert("WebSocket not connected. Try refreshing the page.");
+      }
+  }
+
+  // Enable input only after connection
+  socket.onopen = () => {
+      send.onclick = sendMessage;
+      input.addEventListener('keyup', e => {
+          if (e.key === 'Enter') sendMessage();
+      });
+  };
+
+  // Handle incoming messages
+  socket.onmessage = e => {
+      const data = JSON.parse(e.data);
+      append(data.message, data.sender);
+  };
+
+  socket.onclose = () => {
+      console.error("WebSocket closed.");
+  };
+
+  socket.onerror = err => {
+      console.error("WebSocket error:", err);
+  };
+})();
+</script>
+
+
 {% endblock %}
