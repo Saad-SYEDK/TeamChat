@@ -1,23 +1,26 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Your Chats</h2>
+<h2 class="mb-4">Your Chats</h2>
+
 <a href="{% url 'create_chat' %}" class="btn btn-success mb-3">+ Create New Chat</a>
+
 <ul class="list-group">
-    {% for chat, other_user, unread_count in chats_with_other %}
-  <div class="chat-item">
-    <a href="{% url 'chat_detail' chat.id %}">
-      {% if chat.is_group %}
-        {{ chat.name }}
-      {% else %}
-        {{ other_user.username }}
-      {% endif %}
+  {% for chat, other_user, unread_count in chats_with_other %}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      <span>
+        {% if chat.is_group %}
+          {{ chat.name }}
+        {% else %}
+          {{ other_user.username }}
+        {% endif %}
+      </span>
       {% if unread_count > 0 %}
-        <span class="unread-badge">{{ unread_count }}</span>
+        <span class="badge bg-danger rounded-pill">{{ unread_count }}</span>
       {% endif %}
-    </a>
-  </div>
-{% endfor %}
-
+      <a href="{% url 'chat_detail' chat.id %}" class="stretched-link"></a>
+    </li>
+  {% empty %}
+    <li class="list-group-item">No chats yet</li>
+  {% endfor %}
 </ul>
-
 {% endblock %}
